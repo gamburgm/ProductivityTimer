@@ -18,3 +18,7 @@ let timer = setInterval(function() {
 		document.getElementById("timer").innerHTML = "The countdown is over!";
 	}
 }, 1000);
+
+document.getElementsByTagName('button')[0].addEventListener('click', function() {
+	alert("FRANKENSTEIN");
+});

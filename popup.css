@@ -4,7 +4,8 @@
 	transition: 100ms all ease;
 }
 
-button {
+#help {
+	width: 50px;
 }
 
 .button {
@@ -15,17 +16,12 @@ button {
 	top: 50%;
 	left: 50%;
 	transform: translate(-50%, -50%);
+	background-color: transparent;
+	border: none;
+	outline: none;
 }
 
-#toggle {
-	pointer-events: none;
-	border-style: solid;
-	box-sizing: border-box;
-	border-width: 25px 15px 25px 35px;
-	border-color: transparent transparent transparent black;
-}
-
- .container:hover #toggle {
+body:hover .button {
 	display: block;
 }
 

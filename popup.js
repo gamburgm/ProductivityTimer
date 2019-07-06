@@ -1,21 +1,15 @@
-let endDate = new Date();
-endDate.setMinutes(endDate.getMinutes() + 5);
-let running = false;
+function createTimer(time) {
+	let end     = new Date(Date.now() + time);
 
-let timer = setInterval(function() {
-	let time = endDate.getTime() - new Date().getTime();
-	
-	if (time >= 0 && running) {
-		updateTime(time);
-	}
-}, 100);
+	setInterval(() => updateTime(end), 1000);
+}
 
-function createTimer(
+function updateTime(endTime) {
+	let time = endTime.getTime() - new Date().getTime();
 
-function updateTime(time) {
-	let hours = Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-	let minutes = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
-	let seconds = Math.floor((time % (1000 * 60)) / 1000);
+	let seconds = Math.floor((time / 1000) % 60);
+	let minutes = Math.floor((time / (1000 * 60)) % 60);
+	let hours   = Math.floor((time / (1000 * 60 * 60)) % 24);
 
 	document.getElementById('timer-hours').innerHTML = ('0' + hours).slice(-2) + ':';
 	document.getElementById('timer-minutes').innerHTML = ('0' + minutes).slice(-2) + ':';
@@ -23,9 +17,9 @@ function updateTime(time) {
 }
 
 document.getElementsByTagName('button')[0].addEventListener('click', function() {
-	running = !running;
+	alert("timer clicked, no result");
 });
 
 $(document).ready(() => {
-	createTimer(new Date(new Date().getTime + 5*60*1000));
+	createTimer(5*60*1000);
 });

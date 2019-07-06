@@ -10,6 +10,8 @@ let timer = setInterval(function() {
 	}
 }, 100);
 
+function createTimer(
+
 function updateTime(time) {
 	let hours = Math.floor((time % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
 	let minutes = Math.floor((time % (1000 * 60 * 60)) / (1000 * 60));
@@ -22,4 +24,8 @@ function updateTime(time) {
 
 document.getElementsByTagName('button')[0].addEventListener('click', function() {
 	running = !running;
+});
+
+$(document).ready(() => {
+	createTimer(new Date(new Date().getTime + 5*60*1000));
 });

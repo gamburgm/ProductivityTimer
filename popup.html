@@ -13,7 +13,13 @@
 			</p>
 			<button type="button" class="button" id="button">
 				<svg class='button' id='help' viewbox='0 0 200 200' xmlns="http://www.w3.org/2000/svg">
-					<polygon points="70, 50 70, 140 140, 100" fill="#000"></polygon>
+					<defs>
+						<path id="buttonimg" d="M0,0 L0,0 0,200 150,100 0,0">
+							<animate id="animation" begin="indefinite" attributeName="d" fill="freeze" from="M0,0 L0,0 0,200 150,100 0,0" to="M0,0 L0,0 0,200 150,100 0,0" dur="0.1s"><animate/>
+						</path>
+					</defs>
+					<use xlink:href="#buttonimg" class="ytp-svg-shadow"></use>
+					<use xlink:href="#buttonimg" class="ytp-svg-fill"></use>
 				</svg>
 			</button>
 		</div>

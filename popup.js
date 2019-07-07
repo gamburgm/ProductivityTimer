@@ -61,4 +61,4 @@ function updateTime(time) {
 	document.getElementById('timer-seconds').innerHTML = ('0' + seconds).slice(-2);
 }
 
-$('#help').click(callback(1000));
+$('#help').click(callback(5*60*1000));

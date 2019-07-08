@@ -43,10 +43,10 @@ const callback = (time) => {
 		timeRemaining = time;
 		activeFunction = play;
 		$buttonimg.attr({ "from": resetShape, "to": playShape }).get(0).beginElement();
+		updateTime(timeRemaining);
 	}
 
 	pause();
-	updateTime(timeRemaining);
 
 	return () => activeFunction();
 };
@@ -61,4 +61,4 @@ function updateTime(time) {
 	document.getElementById('timer-seconds').innerHTML = ('0' + seconds).slice(-2);
 }
 
-$('#help').click(callback(5*60*1000));
+$('#help').click(callback(5*1000));

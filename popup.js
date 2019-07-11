@@ -11,6 +11,7 @@ const callback = (time) => {
 	let resetShape = "M0,100 L0,100 100,0 100,100 100,200 0,100 M100,100 L100,100 200,0 200,100 200,200 100,100"
 
 	const play = () => {
+		chrome.runtime.sendMessage({ "message" : "play pressed" });
 		endTime = new Date(Date.now() + timeRemaining);
 		interval = setInterval(() => { 
 			let time = endTime.getTime() - new Date().getTime();
@@ -24,6 +25,7 @@ const callback = (time) => {
 	}
 
 	const pause = () => {
+		chrome.runtime.sendMessage({ "message" : "pause pressed" });
 		timeRemaining = endTime.getTime() - Date.now();
 		clearInterval(interval);
 		$buttonimg.attr({ "from": pauseShape, "to": playShape }).get(0).beginElement();

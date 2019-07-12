@@ -1,8 +1,6 @@
-const callback = (time) => {
-	updateTime(time);
-	let endTime = new Date(Date.now() + time);
+const callback = () => {
+	chrome.runtime.sendMessage({ "message" : "display" }, (response) => { updateTime(response) });
 	let interval;
-	let timeRemaining = time;
 	let activeFunction;
 
 	let $buttonimg = $('#animation');
@@ -11,23 +9,21 @@ const callback = (time) => {
 	let resetShape = "M0,100 L0,100 100,0 100,100 100,200 0,100 M100,100 L100,100 200,0 200,100 200,200 100,100"
 
 	const play = () => {
-		chrome.runtime.sendMessage({ "message" : "play pressed" });
-		endTime = new Date(Date.now() + timeRemaining);
+		chrome.runtime.sendMessage({ "message" : "play" });
 		interval = setInterval(() => { 
-			let time = endTime.getTime() - new Date().getTime();
+			let time;
+			chrome.runtime.sendMessage({ "message" : "display" }, (response) => { updateTime(response) });
 			if (time <= 0) {
 				return end();
 			}
-			updateTime(time);
 		} , 100);
 		$buttonimg.attr({ "from": playShape, "to": pauseShape }).get(0).beginElement();
 		activeFunction = pause;
 	}
 
 	const pause = () => {
-		chrome.runtime.sendMessage({ "message" : "pause pressed" });
-		timeRemaining = endTime.getTime() - Date.now();
 		clearInterval(interval);
+		chrome.runtime.sendMessage({ "message" : "pause" });
 		$buttonimg.attr({ "from": pauseShape, "to": playShape }).get(0).beginElement();
 		activeFunction = play;
 	}
@@ -41,11 +37,10 @@ const callback = (time) => {
 	}
 
 	const reset = () => {
-		endTime = new Date(Date.now() + time);
-		timeRemaining = time;
+		chrome.runtime.sendMessage({ "message" : "reset" });
+		chrome.runtime.sendMessage({ "message" : "display" }, (response) => { updateTime(response) });
 		activeFunction = play;
 		$buttonimg.attr({ "from": resetShape, "to": playShape }).get(0).beginElement();
-		updateTime(timeRemaining);
 	}
 
 	pause();
@@ -63,4 +58,4 @@ function updateTime(time) {
 	document.getElementById('timer-seconds').innerHTML = ('0' + seconds).slice(-2);
 }
 
-$('#help').click(callback(5*1000));
+$('#help').click(callback());

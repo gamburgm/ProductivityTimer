@@ -12,10 +12,10 @@ const callback = () => {
 		chrome.runtime.sendMessage({ "message" : "play" });
 		interval = setInterval(() => { 
 			let time;
-			chrome.runtime.sendMessage({ "message" : "display" }, (response) => { updateTime(response) });
-			if (time <= 0) {
-				return end();
-			}
+			chrome.runtime.sendMessage({ "message" : "display" }, (response) => { 
+				if (response <= 0) { return end() };
+				updateTime(response); 
+			});
 		} , 100);
 		$buttonimg.attr({ "from": playShape, "to": pauseShape }).get(0).beginElement();
 		activeFunction = pause;
@@ -29,7 +29,7 @@ const callback = () => {
 	}
 
 	const end = () => {
-		alert("Time's up!");
+		updateTime(0);
 		$buttonimg.attr({ "from": pauseShape, "to": playShape }).get(0).beginElement();
 		clearInterval(interval);
 		activeFunction = reset;
@@ -43,7 +43,9 @@ const callback = () => {
 		$buttonimg.attr({ "from": resetShape, "to": playShape }).get(0).beginElement();
 	}
 
-	pause();
+	chrome.runtime.sendMessage({ "message" : "status" }, (response) => {
+		response ? pause() : play();
+	});
 
 	return () => activeFunction();
 };

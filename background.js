@@ -34,20 +34,22 @@ function initializeTimer(time) {
 		timeRemaining = endTime - Date.now();
 	}
 
-	chrome.runtime.onMessage.addListener(
-		(request, sender, sendResponse) => {
-			if (request.message === "pause" && !paused) {
-				pause();
-			} else if (request.message === "play" && paused) {
-				play();
-			} else if (request.message === "display") {
-				sendResponse(currentTime());
-			} else if (request.message === "reset") {
-				paused = true;
-				timeRemaining = initialTime;
-			} else if (request.message === "status") {
-				sendResponse(paused);
-			}
+	chrome.runtime.onConnect.addListener(function(port) {
+		if (port.name === "timer") {
+			port.onMessage.addListener(function(msg) {
+				if (msg.message === "play" && paused) {
+					play();
+				} else if (msg.message === "pause" && !paused) {
+					play();
+				} else if (msg.message === "reset") {
+					paused = true;
+					timeRemaining = initialTime;
+				} else if (msg.message === "display") {
+					port.postMessage({ message: "updateTime", contents: updateTime() });
+				} else if (msg.message === "status") {
+					port.postMessage({ message: "updateStatus", contents: paused });
+				}
+			});
 		}
-	);
+	});
 }

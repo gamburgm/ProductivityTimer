@@ -8,6 +8,8 @@ const callback = () => {
 	let pauseShape = "M0,0 L0,0 0,200 50,200 50,0 0,0 M75,0 L75,0 75,200 125,200 125,0 75,0"
 	let resetShape = "M0,100 L0,100 100,0 100,100 100,200 0,100 M100,100 L100,100 200,0 200,100 200,200 100,100"
 
+	let port = chrome.runtime.connect({ name: "timer" });
+
 	const play = () => {
 		chrome.runtime.sendMessage({ "message" : "play" });
 		interval = setInterval(() => { 

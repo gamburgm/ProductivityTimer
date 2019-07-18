@@ -20,8 +20,8 @@ function initializeTimer(time) {
 		timer = setInterval(() => {
 			if (endTime - Date.now() <= 0) {
 				alert("Time's up!");
-				clearInterval(timer);
 				pause();
+				timeRemaining = 0;
 			}
 		}, 100);
 		paused = false;

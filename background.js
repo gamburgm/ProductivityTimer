@@ -37,6 +37,7 @@ function initializeTimer(time) {
 	chrome.runtime.onConnect.addListener(function(port) {
 		if (port.name === "timer") {
 			port.onMessage.addListener(function(msg) {
+				alert("KLDFSJKJKFLJKSDKJFKLDSFKJLDSJKLFDSKLSDFKLJDLKSDJLKFSDLKFDJKLS");
 				if (msg.message === "play" && paused) {
 					play();
 				} else if (msg.message === "pause" && !paused) {
@@ -45,8 +46,10 @@ function initializeTimer(time) {
 					paused = true;
 					timeRemaining = initialTime;
 				} else if (msg.message === "display") {
+					alert("display was called");
 					port.postMessage({ message: "updateTime", contents: updateTime() });
 				} else if (msg.message === "status") {
+					alert("status was called");
 					port.postMessage({ message: "updateStatus", contents: paused });
 				}
 			});

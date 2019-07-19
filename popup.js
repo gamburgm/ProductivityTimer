@@ -1,5 +1,4 @@
 const callback = () => {
-	chrome.runtime.sendMessage({ "message" : "display" }, (response) => { updateTime(response) });
 	let interval;
 	let activeFunction;
 
@@ -8,16 +7,11 @@ const callback = () => {
 	let pauseShape = "M0,0 L0,0 0,200 50,200 50,0 0,0 M75,0 L75,0 75,200 125,200 125,0 75,0"
 	let resetShape = "M0,100 L0,100 100,0 100,100 100,200 0,100 M100,100 L100,100 200,0 200,100 200,200 100,100"
 
-	let port = chrome.runtime.connect({ name: "timer" });
 
 	const play = () => {
-		chrome.runtime.sendMessage({ "message" : "play" });
+		chrome.runtime.sendMessage({ message: "play" });
 		interval = setInterval(() => { 
-			let time;
-			chrome.runtime.sendMessage({ "message" : "display" }, (response) => { 
-				if (response <= 0) { return end() };
-				updateTime(response); 
-			});
+			chrome.runtime.sendMessage({ message: "display" });
 		} , 100);
 		$buttonimg.attr({ "from": playShape, "to": pauseShape }).get(0).beginElement();
 		activeFunction = pause;
@@ -25,13 +19,14 @@ const callback = () => {
 
 	const pause = () => {
 		clearInterval(interval);
-		chrome.runtime.sendMessage({ "message" : "pause" });
+		chrome.runtime.sendMessage({ message: "pause" });
 		$buttonimg.attr({ "from": pauseShape, "to": playShape }).get(0).beginElement();
 		activeFunction = play;
 	}
 
 	const end = () => {
 		updateTime(0);
+		// why is this line necessary?
 		$buttonimg.attr({ "from": pauseShape, "to": playShape }).get(0).beginElement();
 		clearInterval(interval);
 		activeFunction = reset;
@@ -39,15 +34,25 @@ const callback = () => {
 	}
 
 	const reset = () => {
-		chrome.runtime.sendMessage({ "message" : "reset" });
-		chrome.runtime.sendMessage({ "message" : "display" }, (response) => { updateTime(response) });
+		chrome.runtime.sendMessage({ message: "reset" });
+		chrome.runtime.sendMessage({ message: "display" });
 		activeFunction = play;
 		$buttonimg.attr({ "from": resetShape, "to": playShape }).get(0).beginElement();
 	}
 
-	chrome.runtime.sendMessage({ "message" : "status" }, (response) => {
-		response ? pause() : play();
+	let port = chrome.runtime.connect({ name: "timer" });
+	port.onMessage.addListener(function(msg) {
+		if (msg.message === "updateTime") {
+			let time = msg.contents;
+			if (time <= 0) { return end() }
+			updateTime(time);
+		} else if (msg.message === "updateStatus") {
+			message.contents ? pause() : play();
+		}
 	});
+
+	chrome.runtime.sendMessage({ "message" : "display" });
+	chrome.runtime.sendMessage({ "message" : "status" });
 
 	return () => activeFunction();
 };

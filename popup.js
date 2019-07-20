@@ -2,6 +2,7 @@ const callback = () => {
 	let interval;
 	let activeFunction;
 
+	let port;
 	let $buttonimg = $('#animation');
 	let playShape  = "M0,0 L0,0 0,200 75,150 75,50 0,0 M75,150 L75,150 150,100 150,100 75,50 75,150"
 	let pauseShape = "M0,0 L0,0 0,200 50,200 50,0 0,0 M75,0 L75,0 75,200 125,200 125,0 75,0"
@@ -9,9 +10,9 @@ const callback = () => {
 
 
 	const play = () => {
-		chrome.runtime.sendMessage({ message: "play" });
+		port.postMessage({ message: "play" });
 		interval = setInterval(() => { 
-			chrome.runtime.sendMessage({ message: "display" });
+			port.postMessage({ message: "display" });
 		} , 100);
 		$buttonimg.attr({ "from": playShape, "to": pauseShape }).get(0).beginElement();
 		activeFunction = pause;
@@ -19,7 +20,7 @@ const callback = () => {
 
 	const pause = () => {
 		clearInterval(interval);
-		chrome.runtime.sendMessage({ message: "pause" });
+		port.postMessage({ message: "pause" });
 		$buttonimg.attr({ "from": pauseShape, "to": playShape }).get(0).beginElement();
 		activeFunction = play;
 	}
@@ -27,32 +28,31 @@ const callback = () => {
 	const end = () => {
 		updateTime(0);
 		// why is this line necessary?
-		$buttonimg.attr({ "from": pauseShape, "to": playShape }).get(0).beginElement();
 		clearInterval(interval);
 		activeFunction = reset;
 		$buttonimg.attr({ "from": pauseShape, "to": resetShape }).get(0).beginElement();
 	}
 
 	const reset = () => {
-		chrome.runtime.sendMessage({ message: "reset" });
-		chrome.runtime.sendMessage({ message: "display" });
+		port.postMessage({ message: "reset" });
+		port.postMessage({ message: "display" });
 		activeFunction = play;
 		$buttonimg.attr({ "from": resetShape, "to": playShape }).get(0).beginElement();
 	}
 
-	let port = chrome.runtime.connect({ name: "timer" });
+	port = chrome.runtime.connect({ name: "timer" });
 	port.onMessage.addListener(function(msg) {
 		if (msg.message === "updateTime") {
 			let time = msg.contents;
 			if (time <= 0) { return end() }
 			updateTime(time);
 		} else if (msg.message === "updateStatus") {
-			message.contents ? pause() : play();
+			msg.contents ? pause() : play();
 		}
 	});
 
-	chrome.runtime.sendMessage({ "message" : "display" });
-	chrome.runtime.sendMessage({ "message" : "status" });
+	port.postMessage({ "message" : "display" });
+	port.postMessage({ "message" : "status" });
 
 	return () => activeFunction();
 };

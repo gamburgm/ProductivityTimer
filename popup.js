@@ -47,7 +47,8 @@ const callback = () => {
 			if (time <= 0) { return end() }
 			updateTime(time);
 		} else if (msg.message === "updateStatus") {
-			msg.contents ? pause() : play();
+			if (msg.contents <= 0) return end();
+			msg.currStatus ? pause() : play();
 		}
 	});
 

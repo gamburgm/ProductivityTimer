@@ -47,7 +47,7 @@ function initializeTimer(time) {
 				} else if (msg.message === "display") {
 					port.postMessage({ message: "updateTime", contents: currentTime() });
 				} else if (msg.message === "status") {
-					port.postMessage({ message: "updateStatus", contents: paused });
+					port.postMessage({ message: "updateStatus", currStatus: paused, contents: currentTime() });
 				}
 			});
 		}

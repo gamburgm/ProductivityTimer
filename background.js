@@ -2,7 +2,7 @@ chrome.runtime.onInstalled.addListener(() => {
 	let script = document.createElement('script');
 	script.src = 'jquery-3.4.1.min.js';
 	document.getElementsByTagName('head')[0].appendChild(script);
-	initializeTimer(5*1000);
+	initializeTimer(5*60*1000);
 });
 
 function initializeTimer(time) {
@@ -17,6 +17,8 @@ function initializeTimer(time) {
 	}
 
 	const play = () => {
+		endTime = Date.now() + timeRemaining;
+		paused = false;
 		timer = setInterval(() => {
 			if (endTime - Date.now() <= 0) {
 				alert("Time's up!");
@@ -24,8 +26,6 @@ function initializeTimer(time) {
 				timeRemaining = 0;
 			}
 		}, 100);
-		paused = false;
-		endTime = Date.now() + timeRemaining;
 	}
 
 	const pause = () => {

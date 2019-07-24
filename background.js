@@ -2,7 +2,7 @@ chrome.runtime.onInstalled.addListener(() => {
 	let script = document.createElement('script');
 	script.src = 'jquery-3.4.1.min.js';
 	document.getElementsByTagName('head')[0].appendChild(script);
-	initializeTimer(5*60*1000);
+	initializeTimer(5*1000);
 });
 
 function initializeTimer(time) {
@@ -40,7 +40,7 @@ function initializeTimer(time) {
 				if (msg.message === "play" && paused) {
 					play();
 				} else if (msg.message === "pause" && !paused) {
-					play();
+					pause();
 				} else if (msg.message === "reset") {
 					paused = true;
 					timeRemaining = initialTime;

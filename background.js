@@ -5,7 +5,38 @@ chrome.runtime.onInstalled.addListener(() => {
 	initializeTimer(5*1000);
 });
 
+function initializeForm() {
+	chrome.browserAction.setPopup({ popup: 'form.html' });
+	// need to do all of the handling inside of the callback
+	doc = chrome.browserAction.getPopup({}, (result) => {});
+	let hoursList, minutesList, secondsList;
+	hoursList = minutesList = secondsList = "";
+
+	hoursList += "<select>";
+	for (let i = 0; i < 24; i++) {
+		hoursList += `<option value=${i}>${i}</option>`;
+	}
+	hoursList += "</select>";
+
+	minutesList += "<select>";
+	for (let i = 0; i < 60; i++) {
+		minutesList += `<option value=${i}>${i}</option>`;
+	}
+	minutesList += "</select>";
+
+	secondsList += "<select>";
+	for (let i = 0; i < 60; i++) {
+		secondsList += `<option value=${i}>${i}</option>`;
+	}
+	secondsList += "</select>";
+
+	doc.getElementsByTagName('form')[0].appendChild(hoursList);
+	doc.getElementsByTagName('form')[0].appendChild(minutesList);
+	doc.getElementsByTagName('form')[0].appendChild(secondsList);
+}
+
 function initializeTimer(time) {
+	initializeForm();
 	let timer;
 	let initialTime = time;
 	let endTime = new Date(Date.now() + time);

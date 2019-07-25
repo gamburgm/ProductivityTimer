@@ -68,4 +68,5 @@ function updateTime(time) {
 	document.getElementById('timer-seconds').innerHTML = ('0' + seconds).slice(-2);
 }
 
-$('#help').click(callback());
+chrome.browserAction.setPopup({ popup: 'form.html' }); 
+// $('#help').click(callback());
